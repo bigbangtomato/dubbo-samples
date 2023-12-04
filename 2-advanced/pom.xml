@@ -47,7 +47,7 @@
         <module>dubbo-samples-mock</module>
         <module>dubbo-samples-notify</module>
         <module>dubbo-samples-scala</module>
-        <module>dubbo-samples-seata</module>
+<!--        <module>dubbo-samples-seata</module>-->
         <module>dubbo-samples-spi-compatible</module>
         <module>dubbo-samples-stub</module>
         <module>dubbo-samples-tengine</module>
@@ -60,8 +60,8 @@
         <module>dubbo-samples-service-discovery</module>
         <module>dubbo-samples-triple-grpc</module>
         <module>dubbo-samples-triple-no-idl</module>
-        <module>dubbo-samples-native-image</module>
-        <module>dubbo-samples-native-image-registry</module>
+<!--        <module>dubbo-samples-native-image</module>-->
+<!--        <module>dubbo-samples-native-image-registry</module>-->
         <module>dubbo-samples-annotation</module>
         <module>dubbo-samples-spring-xml</module>
         <module>dubbo-samples-api-with-registry</module>
