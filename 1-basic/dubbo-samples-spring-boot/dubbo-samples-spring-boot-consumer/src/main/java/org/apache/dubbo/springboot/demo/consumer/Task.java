@@ -34,7 +34,8 @@ public class Task implements CommandLineRunner {
         System.out.println("Receive result ======> " + result);
 
         new Thread(()-> {
-            while (true) {
+//            while (true)
+            {
                 try {
                     Thread.sleep(1000);
                     System.out.println(new Date() + " Receive result ======> " + demoService.sayHello("world"));
