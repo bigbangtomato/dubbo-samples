@@ -19,6 +19,7 @@ package org.apache.dubbo.springboot.demo.consumer;
 import java.util.Date;
 
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -32,17 +33,28 @@ public class Task implements CommandLineRunner {
     public void run(String... args) throws Exception {
         String result = demoService.sayHello("world");
         System.out.println("Receive result ======> " + result);
+
         new Thread(()-> {
             int i = 0;
-            while (true) {
+//            while (true)
+            {
                 i++;
                 try {
+                    System.out.println("sleeping");
                     Thread.sleep(1000);
-                    System.out.println(new Date() + " Receive result ======> " + demoService.sayHello("world"));
-                    System.out.println(new Date() + " Receive result ======> " + demoService.sayHello(i));
+                    String res1 = demoService.sayHello("world");
+                    System.out.println("going whatever");
+                    System.out.println(new Date() + " Receive result ======> " + res1);
+
+                    String resInt = demoService.sayHello(i);
+                    System.out.println(new Date() + " Receive result ======> " + resInt);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
+                } catch (RpcException e) {
+                    System.out.println(e.getCode());
+                    e.printStackTrace();
+//                    break;
                 }
             }
         }).start();
