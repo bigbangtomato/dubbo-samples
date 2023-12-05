@@ -21,18 +21,22 @@ import java.util.Date;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Task implements CommandLineRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
+
     @DubboReference
     private DemoService demoService;
 
     @Override
     public void run(String... args) throws Exception {
         String result = demoService.sayHello("world");
-        System.out.println("Receive result ======> " + result);
+        LOGGER.info("Receive result ======> " + result);
 
         new Thread(()-> {
             int i = 0;
@@ -40,20 +44,19 @@ public class Task implements CommandLineRunner {
             {
                 i++;
                 try {
-                    System.out.println("sleeping");
+                    LOGGER.info("sleeping");
                     Thread.sleep(1000);
                     String res1 = demoService.sayHello("world");
-                    System.out.println("going whatever");
-                    System.out.println(new Date() + " Receive result ======> " + res1);
+                    LOGGER.info("going whatever");
+                    LOGGER.info(" Receive result ======> " + res1);
 
                     String resInt = demoService.sayHello(i);
-                    System.out.println(new Date() + " Receive result ======> " + resInt);
+                    LOGGER.info(" Receive result ======> " + resInt);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.error("", e);
                     Thread.currentThread().interrupt();
                 } catch (RpcException e) {
-                    System.out.println(e.getCode());
-                    e.printStackTrace();
+                    LOGGER.error("error code is {}.", e.getCode(), e);
 //                    break;
                 }
             }

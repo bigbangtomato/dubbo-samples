@@ -18,7 +18,10 @@ dubbo:
   application:
     name: dubbo-springboot-demo-consumer
   registry:
-    address: zookeeper://${zookeeper.address:127.0.0.1}:2181
+      address: zookeeper://${zookeeper.address:127.0.0.1}:2181
+  service:
+      shutdown:
+          wait: 20000
 
 server:
     shutdown: graceful
