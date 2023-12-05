@@ -27,4 +27,9 @@ public class DemoServiceImpl implements DemoService {
     public String sayHello(String name) {
         return "Hello " + name;
     }
+
+    @Override
+    public String sayHello(Integer num) {
+        return "Hello " + num;
+    }
 }

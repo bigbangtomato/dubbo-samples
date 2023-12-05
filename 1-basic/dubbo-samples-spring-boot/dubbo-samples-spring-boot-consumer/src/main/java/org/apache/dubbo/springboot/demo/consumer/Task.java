@@ -32,13 +32,14 @@ public class Task implements CommandLineRunner {
     public void run(String... args) throws Exception {
         String result = demoService.sayHello("world");
         System.out.println("Receive result ======> " + result);
-
         new Thread(()-> {
-//            while (true)
-            {
+            int i = 0;
+            while (true) {
+                i++;
                 try {
                     Thread.sleep(1000);
                     System.out.println(new Date() + " Receive result ======> " + demoService.sayHello("world"));
+                    System.out.println(new Date() + " Receive result ======> " + demoService.sayHello(i));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
