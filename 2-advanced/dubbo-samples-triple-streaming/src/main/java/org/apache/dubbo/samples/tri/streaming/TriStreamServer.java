@@ -30,8 +30,9 @@ import java.io.IOException;
 
 public class TriStreamServer {
 
-    public static void main(String[] args) throws IOException {
-        new EmbeddedZooKeeper(TriSampleConstants.ZK_PORT, false).start();
+    public static void main(String[] args) throws IOException, InterruptedException {
+//        new EmbeddedZooKeeper(TriSampleConstants.ZK_PORT, false).start();
+
         ServiceConfig<Greeter> service = new ServiceConfig<>();
         service.setInterface(Greeter.class);
         service.setRef(new GreeterImpl("tri-stub"));
@@ -44,5 +45,9 @@ public class TriStreamServer {
                 .service(service)
                 .start();
         System.out.println("Dubbo triple streaming server started, port=" + TriSampleConstants.SERVER_PORT);
+        Object listen = new Object();
+        synchronized (listen) {
+            listen.wait();
+        }
     }
 }

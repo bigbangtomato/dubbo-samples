@@ -32,7 +32,7 @@ import java.io.IOException;
 public class TriStreamClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(TriStreamClient.class);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         DubboBootstrap bootstrap = DubboBootstrap.getInstance();
         ReferenceConfig<Greeter> ref = new ReferenceConfig<>();
         ref.setInterface(Greeter.class);
