@@ -35,6 +35,7 @@ public class ConsumerBootstrap {
         GreetingServiceConsumer greetingServiceConsumer = context.getBean(GreetingServiceConsumer.class);
         String hello = greetingServiceConsumer.doSayHello("zookeeper");
         System.out.println("result: " + hello);
+        context.close();
     }
 
     @Configuration
