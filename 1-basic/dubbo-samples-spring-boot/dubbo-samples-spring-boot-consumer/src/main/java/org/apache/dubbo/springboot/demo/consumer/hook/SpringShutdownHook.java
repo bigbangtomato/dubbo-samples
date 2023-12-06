@@ -22,11 +22,6 @@ public class SpringShutdownHook {
     private final BlockingQueue<Object> blockingQueue = new LinkedBlockingQueue<>();
 
     public void shuttingDown() {
-        try {
-            Thread.sleep(10 * 1000);
-        } catch (InterruptedException e) {
-            LOGGER.error("waiting for shutting down is interrupted", e);
-        }
         this.blockingQueue.add(new Object());
     }
 
