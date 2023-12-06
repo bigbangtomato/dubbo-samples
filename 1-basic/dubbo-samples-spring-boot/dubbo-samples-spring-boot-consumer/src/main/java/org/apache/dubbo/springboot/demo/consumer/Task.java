@@ -16,14 +16,20 @@
  */
 package org.apache.dubbo.springboot.demo.consumer;
 
-import java.util.Date;
+import java.io.IOException;
 
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscovery;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
+import org.apache.zookeeper.ClientCnxn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,11 +39,25 @@ public class Task implements CommandLineRunner {
     @DubboReference
     private DemoService demoService;
 
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
+    @Autowired
+    private ZookeeperServiceRegistry serviceRegistry;
+
+//    @Autowired
+//    private ZookeeperServiceDiscovery zookeeperServiceDiscovery;
+
+//    @Autowired
+//    private ClientCnxn clientCnxn;
+
     @Override
     public void run(String... args) throws Exception {
         String result = demoService.sayHello("world");
         LOGGER.info("Receive result ======> " + result);
 
+
+        ApplicationContext context = SpringContextUtil.instance().getContext();
         new Thread(()-> {
             int i = 0;
 //            while (true)
@@ -52,12 +72,16 @@ public class Task implements CommandLineRunner {
 
                     String resInt = demoService.sayHello(i);
                     LOGGER.info(" Receive result ======> " + resInt);
+
+//                    SpringContextUtil.instance().closeZookeeper();
                 } catch (InterruptedException e) {
                     LOGGER.error("", e);
                     Thread.currentThread().interrupt();
                 } catch (RpcException e) {
                     LOGGER.error("error code is {}.", e.getCode(), e);
 //                    break;
+                } catch (Exception e) {
+                    LOGGER.error("failed to destroy zookeeperServiceDiscovery.", e);
                 }
             }
         }).start();
