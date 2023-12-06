@@ -21,10 +21,7 @@ import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -38,19 +35,6 @@ public class Task implements CommandLineRunner {
     @DubboReference(version = "2.0.0")
     private DemoService demoServiceV2;
 
-
-    @Autowired
-    private DiscoveryClient discoveryClient;
-
-    @Autowired
-    private ZookeeperServiceRegistry serviceRegistry;
-
-//    @Autowired
-//    private ZookeeperServiceDiscovery zookeeperServiceDiscovery;
-
-//    @Autowired
-//    private ClientCnxn clientCnxn;
-
     @Override
     public void run(String... args) throws Exception {
         String result = demoService.sayHello("world");
@@ -58,8 +42,6 @@ public class Task implements CommandLineRunner {
 
         String resultV2 = demoServiceV2.sayHello("hell");
         LOGGER.info("Receive result ======> " + resultV2);
-
-        ApplicationContext context = SpringContextUtil.instance().getContext();
         new Thread(()-> {
             int i = 0;
 //            while (true)

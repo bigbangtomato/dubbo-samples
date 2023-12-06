@@ -18,7 +18,7 @@ dubbo:
   application:
     name: dubbo-springboot-demo-consumer
   registry:
-      address: zookeeper://${zookeeper.address:127.0.0.1}:2181
+      address: nacos://localhost:8848
   service:
       shutdown:
           wait: 20000
