@@ -85,6 +85,8 @@ public class Task implements CommandLineRunner {
                 } catch (Exception e) {
                     LOGGER.error("failed to destroy zookeeperServiceDiscovery.", e);
                 }
+
+                // how to close curator gracefully?
             }
         }).start();
     }

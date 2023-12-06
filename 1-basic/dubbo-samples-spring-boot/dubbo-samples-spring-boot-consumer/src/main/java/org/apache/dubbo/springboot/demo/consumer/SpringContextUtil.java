@@ -5,13 +5,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.curator.CuratorZookeeperClient;
 import org.apache.curator.framework.imps.CuratorFrameworkImpl;
+import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.details.ServiceDiscoveryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.cloud.client.serviceregistry.AbstractAutoServiceRegistration;
-import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperAutoServiceRegistration;
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry;
 import org.springframework.context.ApplicationContext;
@@ -30,7 +30,7 @@ public class SpringContextUtil implements ApplicationContextAware {
 	private static ConfigurableListableBeanFactory configurableListableBeanFactory;
 
     private ZookeeperAutoServiceRegistration zookeeperAutoServiceRegistration;
-    private ServiceRegistry zookeeperRegistry = null;
+    private ZookeeperServiceRegistry zookeeperServiceRegistry = null;
     private CuratorZookeeperClient zookeeperClient = null;
     private final AtomicBoolean lockZookeeper = new AtomicBoolean(false);
 
@@ -65,11 +65,11 @@ public class SpringContextUtil implements ApplicationContextAware {
             Field filedServiceRegistry = clazz.getDeclaredField("serviceRegistry");
             //设置即使该属性是private，也可以进行访问(默认是false)
             filedServiceRegistry.setAccessible(true);
-            this.zookeeperRegistry = (ServiceRegistry)filedServiceRegistry.get(zookeeperAutoServiceRegistration);
+            this.zookeeperServiceRegistry = (ZookeeperServiceRegistry)filedServiceRegistry.get(zookeeperAutoServiceRegistration);
 
             Field fieldServiceDiscovery = ZookeeperServiceRegistry.class.getDeclaredField("serviceDiscovery");
             fieldServiceDiscovery.setAccessible(true);
-            ServiceDiscoveryImpl serviceDiscovery = (ServiceDiscoveryImpl)fieldServiceDiscovery.get(zookeeperRegistry);
+            ServiceDiscovery serviceDiscovery = (ServiceDiscoveryImpl)fieldServiceDiscovery.get(zookeeperServiceRegistry);
 
             Field fieldCuratorFrame = ServiceDiscoveryImpl.class.getDeclaredField("client");
             fieldCuratorFrame.setAccessible(true);
@@ -86,6 +86,7 @@ public class SpringContextUtil implements ApplicationContextAware {
     }
 
     public void closeZookeeper() {
+        this.zookeeperServiceRegistry.close();
         this.zookeeperClient.close();
     }
 

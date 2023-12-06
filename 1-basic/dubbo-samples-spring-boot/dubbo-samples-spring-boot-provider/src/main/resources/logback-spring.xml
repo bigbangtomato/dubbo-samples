@@ -4,7 +4,7 @@
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
 	<springProperty scope="context" name="springAppName" source="dubbo.application.name" />
     <property name="path" value="/data/logs/java/dubbo/demo/" />
-	<contextName>springboot-consumer</contextName>
+	<contextName>springboot-provider</contextName>
 	<jmxConfigurator />
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<Target>System.out</Target>
@@ -18,7 +18,7 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<Prudent>true</Prudent>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${path}log_springboot_consumer_%d{yyyy-MM-dd}.%i.log
+			<fileNamePattern>${path}log_springboot_provider_%d{yyyy-MM-dd}.%i.log
 			</fileNamePattern>
 			<maxHistory>60</maxHistory>
 			<timeBasedFileNamingAndTriggeringPolicy
@@ -40,7 +40,7 @@
 		</filter>
 		<Prudent>true</Prudent>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${path}log_springboot_consumer_error_%d{yyyy-MM-dd}.%i.log
+			<fileNamePattern>${path}log_springboot_provider_error_%d{yyyy-MM-dd}.%i.log
 			</fileNamePattern>
 			<maxHistory>60</maxHistory>
 			<timeBasedFileNamingAndTriggeringPolicy
@@ -74,7 +74,7 @@
     <logger name="org.apache.zookeeper" level="info"/>
     <logger name="org.quartz" level="info" />
     <logger name="org.apache.curator" level="info" />
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="ASYNCConsole" />
         <appender-ref ref="ASYNCFile" />
     </root>
