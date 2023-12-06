@@ -26,7 +26,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ConsumerApplication {
 
     public static void main(String[] args) throws InterruptedException {
-        SpringApplication.run(ConsumerApplication.class, args);
+//        SpringApplication.run(ConsumerApplication.class, args);
+        SpringApplication app = new SpringApplication(ConsumerApplication.class);
+        app.setRegisterShutdownHook(false);
+        app.run(args);
+
+        SpringContextUtil.instance().unregisterDubboShutdownHook();
+
+
         Object wait = new Object();
         synchronized (wait) {
             wait.wait();

@@ -23,8 +23,10 @@ import javax.annotation.PostConstruct;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
+import org.apache.dubbo.springboot.demo.consumer.hook.SpringShutdownHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,9 @@ public class Task implements CommandLineRunner {
 
     private final AtomicBoolean shutingDown = new AtomicBoolean(false);
     private final AtomicBoolean running = new AtomicBoolean(true);
+
+    @Autowired
+    private SpringShutdownHook springShutdownHook;
 
     @Override
     public void run(String... args) throws Exception {
@@ -63,8 +68,6 @@ public class Task implements CommandLineRunner {
 
                     String resInt = demoService.sayHello(i);
                     LOGGER.info(" Receive result ======> " + resInt);
-
-//                    SpringContextUtil.instance().closeZookeeper();
                 } catch (InterruptedException e) {
                     LOGGER.error("", e);
                     Thread.currentThread().interrupt();
@@ -77,7 +80,7 @@ public class Task implements CommandLineRunner {
 
                 // how to close curator gracefully?
             }
-            running.set(false);
+            springShutdownHook.shuttingDown();
         }).start();
     }
 
@@ -91,13 +94,6 @@ public class Task implements CommandLineRunner {
             @Override
             public void run() {
                 shutingDown.set(true);
-                while (running.get()) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        LOGGER.error("waiting for shutting down is interrupted", e);
-                    }
-                }
             }
         });
     }

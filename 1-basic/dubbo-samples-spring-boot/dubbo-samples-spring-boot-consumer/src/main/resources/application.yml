@@ -14,15 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-dubbo:
-  application:
-    name: dubbo-springboot-demo-consumer
-    qosEnable: false
-  registry:
-      address: nacos://localhost:8848
-  service:
-      shutdown:
-          wait: 20000
-
 server:
     shutdown: graceful
+
+
+spring:
+    lifecycle:
+        timeout-per-shutdown-phase: 30s
+
+dubbo:
+    application:
+        name: dubbo-springboot-demo-consumer
+        qosEnable: false
+    registry:
+      address: nacos://localhost:8848
