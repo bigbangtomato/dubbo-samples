@@ -74,7 +74,8 @@
     <logger name="org.apache.zookeeper" level="info"/>
     <logger name="org.quartz" level="info" />
     <logger name="org.apache.curator" level="info" />
-    <root level="debug">
+<!--    <logger name="org.apache.dubbo.metadata.store.nacos" level="warn" />-->
+    <root level="info">
         <appender-ref ref="ASYNCConsole" />
         <appender-ref ref="ASYNCFile" />
     </root>
