@@ -17,6 +17,7 @@
 dubbo:
   application:
     name: dubbo-springboot-demo-consumer
+    qosEnable: false
   registry:
       address: nacos://localhost:8848
   service:
