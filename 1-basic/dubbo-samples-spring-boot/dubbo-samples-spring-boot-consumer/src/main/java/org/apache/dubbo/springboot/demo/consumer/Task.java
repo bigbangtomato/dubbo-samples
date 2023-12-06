@@ -16,13 +16,9 @@
  */
 package org.apache.dubbo.springboot.demo.consumer;
 
-import java.io.IOException;
-
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscovery;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
-import org.apache.zookeeper.ClientCnxn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +32,12 @@ import org.springframework.stereotype.Component;
 public class Task implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 
-    @DubboReference
+    @DubboReference(version = "1.0.0")
     private DemoService demoService;
+
+    @DubboReference(version = "2.0.0")
+    private DemoService demoServiceV2;
+
 
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -56,6 +56,8 @@ public class Task implements CommandLineRunner {
         String result = demoService.sayHello("world");
         LOGGER.info("Receive result ======> " + result);
 
+        String resultV2 = demoServiceV2.sayHello("hell");
+        LOGGER.info("Receive result ======> " + resultV2);
 
         ApplicationContext context = SpringContextUtil.instance().getContext();
         new Thread(()-> {

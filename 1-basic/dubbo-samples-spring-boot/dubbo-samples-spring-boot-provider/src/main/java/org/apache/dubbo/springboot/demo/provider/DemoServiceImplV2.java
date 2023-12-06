@@ -20,16 +20,16 @@ package org.apache.dubbo.springboot.demo.provider;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.springboot.demo.DemoService;
 
-@DubboService(version = "1.0.0")
-public class DemoServiceImpl implements DemoService {
+@DubboService(version = "2.0.0")
+public class DemoServiceImplV2 extends DemoServiceImpl {
 
     @Override
     public String sayHello(String name) {
-        return "Hello " + name;
+        return "fuck " + name;
     }
 
     @Override
     public String sayHello(Integer num) {
-        return "Hello " + num;
+        return "fuck " + num;
     }
 }
