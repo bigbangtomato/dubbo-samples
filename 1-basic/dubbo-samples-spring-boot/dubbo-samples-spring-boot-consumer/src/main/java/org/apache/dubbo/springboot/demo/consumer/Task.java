@@ -16,13 +16,16 @@
  */
 package org.apache.dubbo.springboot.demo.consumer;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,6 +38,9 @@ public class Task implements CommandLineRunner {
     @DubboReference(version = "2.0.0")
     private DemoService demoServiceV2;
 
+    private final AtomicBoolean shutingDown = new AtomicBoolean(false);
+    private final AtomicBoolean running = new AtomicBoolean(true);
+
     @Override
     public void run(String... args) throws Exception {
         String result = demoService.sayHello("world");
@@ -44,9 +50,10 @@ public class Task implements CommandLineRunner {
         LOGGER.info("Receive result ======> " + resultV2);
         new Thread(()-> {
             int i = 0;
-//            while (true)
+            while (!shutingDown.get())
             {
                 i++;
+                running.set(true);
                 try {
                     LOGGER.info("sleeping");
                     Thread.sleep(1000);
@@ -70,6 +77,28 @@ public class Task implements CommandLineRunner {
 
                 // how to close curator gracefully?
             }
+            running.set(false);
         }).start();
+    }
+
+    @PostConstruct
+    private void init() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            /**
+             * 没用。
+             */
+
+            @Override
+            public void run() {
+                shutingDown.set(true);
+                while (running.get()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        LOGGER.error("waiting for shutting down is interrupted", e);
+                    }
+                }
+            }
+        });
     }
 }
