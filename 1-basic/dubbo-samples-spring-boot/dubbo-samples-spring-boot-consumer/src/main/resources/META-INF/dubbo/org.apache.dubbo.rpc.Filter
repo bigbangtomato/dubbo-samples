@@ -1,0 +1,1 @@
+dubboLogFilter=org.apache.dubbo.springboot.demo.consumer.aop.MyFilter

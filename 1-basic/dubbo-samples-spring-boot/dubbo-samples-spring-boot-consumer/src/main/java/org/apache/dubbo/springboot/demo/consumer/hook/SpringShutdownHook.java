@@ -1,6 +1,5 @@
 package org.apache.dubbo.springboot.demo.consumer.hook;
 
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -30,19 +29,27 @@ public class SpringShutdownHook {
         LOGGER.info("[SpringShutdownHook] Register ShutdownHook....");
         Thread shutdownHook = new Thread() {
             public void run() {
-                try {
-                    int timeOut = 30000;
-                    LOGGER.info("[SpringShutdownHook] Application need sleep {} seconds to wait Dubbo shutdown", (double)timeOut / 1000.0D);
-                    blockingQueue.take();
-                    configurableApplicationContext.close();
-                    LOGGER.info("[SpringShutdownHook] ApplicationContext closed, Application shutdown");
-                } catch (InterruptedException e) {
-	                LOGGER.error("interrupted when waiting for shuting down spring.", e);
-                } finally {
-
-                }
+                shutdownDirectly();
             }
         };
         Runtime.getRuntime().addShutdownHook(shutdownHook);
+    }
+
+    private void shutdownDirectly() {
+        configurableApplicationContext.close();
+    }
+
+    private void shutdownWaiting() {
+        try {
+            int timeOut = 30000;
+            LOGGER.info("[SpringShutdownHook] Application need sleep {} seconds to wait Dubbo shutdown", (double)timeOut / 1000.0D);
+            blockingQueue.take();
+            configurableApplicationContext.close();
+            LOGGER.info("[SpringShutdownHook] ApplicationContext closed, Application shutdown");
+        } catch (InterruptedException e) {
+            LOGGER.error("interrupted when waiting for shuting down spring.", e);
+        } finally {
+
+        }
     }
 }
