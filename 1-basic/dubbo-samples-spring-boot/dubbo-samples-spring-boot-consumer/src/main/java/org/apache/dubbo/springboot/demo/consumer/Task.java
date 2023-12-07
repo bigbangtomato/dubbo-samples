@@ -18,11 +18,10 @@ package org.apache.dubbo.springboot.demo.consumer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
+import org.apache.dubbo.springboot.demo.consumer.aop.GracefulShuttingDown;
 import org.apache.dubbo.springboot.demo.consumer.hook.SpringShutdownHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,6 @@ public class Task implements CommandLineRunner {
     @DubboReference(version = "2.0.0")
     private DemoService demoServiceV2;
 
-    private final AtomicBoolean shutingDown = new AtomicBoolean(false);
     private final AtomicBoolean running = new AtomicBoolean(true);
 
     @Autowired
@@ -55,46 +53,56 @@ public class Task implements CommandLineRunner {
         LOGGER.info("Receive result ======> " + resultV2);
         new Thread(()-> {
             int i = 0;
-            while (!shutingDown.get())
+            while (!GracefulShuttingDown.isShuttingDown())
             {
                 i++;
                 running.set(true);
                 try {
-                    LOGGER.info("sleeping");
-                    Thread.sleep(1000);
                     String res1 = demoService.sayHello("world");
                     LOGGER.info("going whatever");
                     LOGGER.info(" Receive result ======> " + res1);
 
                     String resInt = demoService.sayHello(i);
                     LOGGER.info(" Receive result ======> " + resInt);
-                } catch (InterruptedException e) {
-                    LOGGER.error("", e);
-                    Thread.currentThread().interrupt();
+//                    LOGGER.info("sleeping");
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    LOGGER.error("", e);
+//                    Thread.currentThread().interrupt();
                 } catch (RpcException e) {
                     LOGGER.error("error code is {}.", e.getCode(), e);
-//                    break;
                 } catch (Exception e) {
-                    LOGGER.error("failed to destroy zookeeperServiceDiscovery.", e);
+                    LOGGER.error("failed to destroy registry at V1.", e);
                 }
-
-                // how to close curator gracefully?
             }
-            springShutdownHook.shuttingDown();
+//            springShutdownHook.shuttingDown();
         }).start();
-    }
 
-    @PostConstruct
-    private void init() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            /**
-             * 没用。
-             */
+        new Thread(()-> {
+            int i = 0;
+            while (!GracefulShuttingDown.isShuttingDown())
+            {
+                i++;
+                running.set(true);
+                try {
+                    String res1 = demoServiceV2.sayHello("world");
+                    LOGGER.info("going whatever");
+                    LOGGER.info(" Receive result2 ======> " + res1);
 
-            @Override
-            public void run() {
-                shutingDown.set(true);
+                    String resInt = demoServiceV2.sayHello(i);
+                    LOGGER.info(" Receive result2 ======> " + resInt);
+//                    LOGGER.info("sleeping");
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    LOGGER.error("", e);
+//                    Thread.currentThread().interrupt();
+                } catch (RpcException e) {
+                    LOGGER.error("error code is {}.", e.getCode(), e);
+                } catch (Exception e) {
+                    LOGGER.error("failed to destroy registry at V2.", e);
+                }
             }
-        });
+//            springShutdownHook.shuttingDown();
+        }).start();
     }
 }
