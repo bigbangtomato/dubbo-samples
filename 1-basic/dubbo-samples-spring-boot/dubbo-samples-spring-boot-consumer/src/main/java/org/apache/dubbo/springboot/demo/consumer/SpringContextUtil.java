@@ -28,10 +28,6 @@ public class SpringContextUtil implements ApplicationContextAware {
     private static ApplicationContext context = null;
 	private static SpringContextUtil singleton;
 	private static ConfigurableListableBeanFactory configurableListableBeanFactory;
-    private DubboConfigApplicationListener dubboConfigApplicationListener = null;
-    private DubboShutdownHook dubboShutdownHook = null;
-
-    private final AtomicBoolean lockZookeeper = new AtomicBoolean(false);
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -42,45 +38,8 @@ public class SpringContextUtil implements ApplicationContextAware {
     }
 
 	public static SpringContextUtil instance() {
-        singleton.retrieveDubboListener();
 		return singleton;
 	}
-
-    private void retrieveDubboListener() {
-        if (!lockZookeeper.compareAndSet(false, true)) {
-            return;
-        }
-        for (ApplicationListener<?> listener : ((AnnotationConfigApplicationContext)context).getApplicationListeners()) {
-            if (listener.getClass().getName().equals(DubboConfigApplicationListener.class.getName())) {
-                this.dubboConfigApplicationListener = (DubboConfigApplicationListener)listener;
-            }
-        }
-    }
-
-    public void unregisterDubboShutdownHook() {
-        Class clazz = DubboConfigApplicationListener.class;
-        try {
-            Field filedModuleModel = clazz.getDeclaredField("moduleModel");
-            //设置即使该属性是private，也可以进行访问(默认是false)
-            filedModuleModel.setAccessible(true);
-            ModuleModel moduleModel = (ModuleModel)filedModuleModel.get(dubboConfigApplicationListener);
-
-            Field fieldModuleDeployer = ModuleModel.class.getDeclaredField("deployer");
-            fieldModuleDeployer.setAccessible(true);
-            ModuleDeployer serviceDiscovery = (ModuleDeployer)fieldModuleDeployer.get(moduleModel);
-
-            Field fieldApplicationDeployer = DefaultModuleDeployer.class.getDeclaredField("applicationDeployer");
-            fieldApplicationDeployer.setAccessible(true);
-            ApplicationDeployer applicationDeployer = (ApplicationDeployer)fieldApplicationDeployer.get(serviceDiscovery);
-
-            Field fieldDubboShutdownHook = DefaultApplicationDeployer.class.getDeclaredField("dubboShutdownHook");
-            fieldDubboShutdownHook.setAccessible(true);
-            this.dubboShutdownHook = (DubboShutdownHook)fieldDubboShutdownHook.get(applicationDeployer);
-            dubboShutdownHook.unregister();
-        }catch (Exception e){
-            LOGGER.error("failed to get zookeeper registry", e);
-        }
-    }
 
 	public String substitueProperties(String str) {
 		return configurableListableBeanFactory.resolveEmbeddedValue(str);

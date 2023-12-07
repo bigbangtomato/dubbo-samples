@@ -12,8 +12,10 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.model.ScopeModelAware;
+import org.apache.dubbo.springboot.demo.consumer.hook.SpringShutdownHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.apache.dubbo.common.constants.CommonConstants.CONSUMER;
@@ -25,6 +27,9 @@ public class GracefulShuttingDown implements Filter, ScopeModelAware {
 
     private static final AtomicInteger count = new AtomicInteger(0);
     private static final AtomicBoolean shuttingDown = new AtomicBoolean(false);
+
+    @Autowired
+    private SpringShutdownHook springShutdownHook;
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
@@ -38,7 +43,7 @@ public class GracefulShuttingDown implements Filter, ScopeModelAware {
         }
     }
 
-    public static int countRpcCalling() {
+    private static int countRpcCalling() {
         return count.get();
     }
 
@@ -49,6 +54,16 @@ public class GracefulShuttingDown implements Filter, ScopeModelAware {
             public void run() {
                 LOGGER.info("GracefulShuttingDown marked.");
                 shuttingDown.set(true);
+                try {
+                    int timeWait = 10000;
+                    while (countRpcCalling() > 0) {
+                        Thread.sleep(timeWait);
+                    }
+                    Thread.sleep(timeWait);
+                } catch (InterruptedException e) {
+                    LOGGER.error("interrupted when waiting for shuting down spring.", e);
+                }
+                springShutdownHook.shuttingDown();
             }
         });
     }

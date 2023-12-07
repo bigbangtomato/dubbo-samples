@@ -17,25 +17,23 @@
 
 package org.apache.dubbo.springboot.demo.consumer;
 
-import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
-import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
+import org.apache.dubbo.springboot.demo.consumer.hook.SpringShutdownHook;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
-//@DubboComponentScan(basePackages = "org.apache.dubbo.springboot.demo.consumer")
 @SpringBootApplication
-//@EnableDubbo
 public class ConsumerApplication {
 
     public static void main(String[] args) throws InterruptedException {
 //        SpringApplication.run(ConsumerApplication.class, args);
         SpringApplication app = new SpringApplication(ConsumerApplication.class);
         app.setRegisterShutdownHook(false);
-        app.run(args);
+        ConfigurableApplicationContext context = app.run(args);
 
-        SpringContextUtil.instance().unregisterDubboShutdownHook();
-
-
+        SpringShutdownHook hook = context.getBean(SpringShutdownHook.class);
+        hook.unregisterDubboShutdownHook();
+//        SpringContextUtil.instance().unregisterDubboShutdownHook();
         Object wait = new Object();
         synchronized (wait) {
             wait.wait();
