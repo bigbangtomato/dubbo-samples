@@ -26,4 +26,4 @@ dubbo:
 
 demo:
     log:
-        path: /data/logs/java/dubbo/demo/simpleServer
+        path: /data/logs/java/dubbo/demo/simpleServer/
