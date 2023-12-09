@@ -30,11 +30,13 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     public String sayHello(String name) {
+        LOGGER.info("handle client request {}", name);
         return "Hello " + name;
     }
 
     @Override
     public String sayHello(Integer num) {
+        LOGGER.info("handle client request {}", num);
         return "Hello " + num;
     }
 }

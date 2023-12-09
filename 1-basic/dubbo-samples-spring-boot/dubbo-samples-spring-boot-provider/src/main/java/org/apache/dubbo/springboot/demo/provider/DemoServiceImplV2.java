@@ -18,17 +18,22 @@ package org.apache.dubbo.springboot.demo.provider;
 
 
 import org.apache.dubbo.config.annotation.DubboService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @DubboService(version = "2.0.0")
 public class DemoServiceImplV2 extends DemoServiceImpl {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DemoServiceImplV2.class);
 
     @Override
     public String sayHello(String name) {
-        return "fuck " + name;
+        LOGGER.info("handle client request {}", name);
+        return "Hello " + name;
     }
 
     @Override
     public String sayHello(Integer num) {
-        return "fuck " + num;
+        LOGGER.info("handle client request {}", num);
+        return "Hello " + num;
     }
 }
