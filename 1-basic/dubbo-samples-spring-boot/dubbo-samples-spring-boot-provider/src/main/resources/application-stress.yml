@@ -1,0 +1,7 @@
+
+
+demo:
+    log:
+        node: 0
+#        path: /data/logs/java/dubbo/demo/
+        path: /data/logs/java/dubbo/demo/simpleServer/stress/${demo.log.node}/

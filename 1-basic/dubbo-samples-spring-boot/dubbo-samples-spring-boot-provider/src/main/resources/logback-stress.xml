@@ -3,7 +3,10 @@
 <configuration scan="true" scanPeriod="1 seconds">
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
 	<springProperty scope="context" name="springAppName" source="dubbo.application.name" />
-    <springProperty scope="context" name="path" source="demo.log.path" />
+    <springProperty scope="context" name="stress.node" source="stress.node" />
+
+    <property name="path" value="/data/logs/java/dubbo/demo/simpleServer/stress/${stress.node}/" />
+
 	<contextName>springboot-provider</contextName>
 	<jmxConfigurator />
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
@@ -65,7 +68,9 @@
 		<appender-ref ref="stdout" />
 	</appender>
 
-	<!--开发环境，多个使用,隔开，同步输出到屏幕 -->
+
+
+    <!--开发环境，多个使用,隔开，同步输出到屏幕 -->
     <logger name="org.springframework" level="info" />
     <logger name="org.apache.http" level="error" />
     <logger name="com.netflix" level="info" />
@@ -74,17 +79,7 @@
     <logger name="org.apache.zookeeper" level="info"/>
     <logger name="org.quartz" level="info" />
     <logger name="org.apache.curator" level="info" />
-
-
-    <springProfile name="dev">
-        <root level="info">
-            <appender-ref ref="ASYNCConsole" />
-            <appender-ref ref="ASYNCFile" />
-        </root>
-    </springProfile>
-    <springProfile name="stress">
-        <root level="info">
-            <appender-ref ref="ASYNCFile" />
-        </root>
-    </springProfile>
+    <root level="info">
+        <appender-ref ref="ASYNCFile" />
+    </root>
 </configuration>

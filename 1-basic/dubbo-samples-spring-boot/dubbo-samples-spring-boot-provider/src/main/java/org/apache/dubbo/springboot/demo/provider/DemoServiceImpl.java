@@ -17,11 +17,21 @@
 package org.apache.dubbo.springboot.demo.provider;
 
 
+import javax.annotation.PostConstruct;
+
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.springboot.demo.DemoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @DubboService(version = "1.0.0")
 public class DemoServiceImpl implements DemoService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DemoServiceImpl.class);
+
+    @PostConstruct
+    private void init() {
+        LOGGER.info("start xxxxxxxxxxxxxxx");
+    }
 
     @Override
     public String sayHello(String name) {

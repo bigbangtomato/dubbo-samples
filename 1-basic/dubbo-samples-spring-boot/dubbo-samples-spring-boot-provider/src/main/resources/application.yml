@@ -22,3 +22,8 @@ dubbo:
     port: 50052
   registry:
     address: nacos://localhost:8848
+
+
+demo:
+    log:
+        path: /data/logs/java/dubbo/demo/
