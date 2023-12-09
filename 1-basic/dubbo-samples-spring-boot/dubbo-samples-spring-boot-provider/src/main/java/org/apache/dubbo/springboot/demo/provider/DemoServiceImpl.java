@@ -28,11 +28,6 @@ import org.slf4j.LoggerFactory;
 public class DemoServiceImpl implements DemoService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoServiceImpl.class);
 
-    @PostConstruct
-    private void init() {
-        LOGGER.info("start xxxxxxxxxxxxxxx");
-    }
-
     @Override
     public String sayHello(String name) {
         return "Hello " + name;
