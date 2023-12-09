@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.springboot.demo.consumer;
+package org.apache.dubbo.springboot.demo.consumer.task;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,9 +40,6 @@ public class Task implements CommandLineRunner {
     private DemoService demoServiceV2;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
-
-    @Autowired
-    private SpringShutdownHook springShutdownHook;
 
     @Override
     public void run(String... args) throws Exception {
