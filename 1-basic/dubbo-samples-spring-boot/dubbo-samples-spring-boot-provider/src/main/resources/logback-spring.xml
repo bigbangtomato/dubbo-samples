@@ -82,6 +82,8 @@
             <appender-ref ref="ASYNCFile" />
         </root>
     </springProfile>
+
+<!--    <springProfile name="!dev">-->
     <springProfile name="stress">
         <root level="info">
             <appender-ref ref="ASYNCFile" />
