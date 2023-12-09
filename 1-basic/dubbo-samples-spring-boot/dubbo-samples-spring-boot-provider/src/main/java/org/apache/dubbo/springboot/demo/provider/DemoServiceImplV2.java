@@ -18,7 +18,6 @@ package org.apache.dubbo.springboot.demo.provider;
 
 
 import org.apache.dubbo.config.annotation.DubboService;
-import org.apache.dubbo.springboot.demo.DemoService;
 
 @DubboService(version = "2.0.0")
 public class DemoServiceImplV2 extends DemoServiceImpl {
