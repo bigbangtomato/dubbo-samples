@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="1 seconds">
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<springProperty scope="context" name="springAppName" source="dubbo.application.name" />
+    <springProperty scope="context" name="path" source="demo.log.path" />
+	<contextName>springboot-provider</contextName>
+	<jmxConfigurator />
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<Target>System.out</Target>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]) %c.%M\(%L\) %m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="rollfile-all"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${path}log_springboot_provider_%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<maxHistory>60</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>1000MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]) %c.%M\(%L\) %m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	<appender name="rollfile-error"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${path}log_springboot_provider_error_%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<maxHistory>60</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>1000MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]) %c.%M\(%L\) %m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="ASYNCFile" class="ch.qos.logback.classic.AsyncAppender">
+		<includeCallerData>true</includeCallerData>
+		<appender-ref ref="rollfile-all" />
+		<appender-ref ref="rollfile-error" />
+	</appender>
+
+	<appender name="ASYNCConsole" class="ch.qos.logback.classic.AsyncAppender">
+		<includeCallerData>true</includeCallerData>
+		<appender-ref ref="stdout" />
+	</appender>
+
+	<!--开发环境，多个使用,隔开，同步输出到屏幕 -->
+    <logger name="org.springframework" level="info" />
+    <logger name="org.apache.http" level="error" />
+    <logger name="com.netflix" level="info" />
+    <logger name="org.mybatis" level="debug" />
+    <logger name="org.apache.kafka" level="info" />
+    <logger name="org.apache.zookeeper" level="info"/>
+    <logger name="org.quartz" level="info" />
+    <logger name="org.apache.curator" level="info" />
+
+
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="ASYNCConsole" />
+            <appender-ref ref="ASYNCFile" />
+        </root>
+    </springProfile>
+
+<!--    <springProfile name="!dev">-->
+    <springProfile name="stress">
+        <root level="info">
+            <appender-ref ref="ASYNCFile" />
+        </root>
+    </springProfile>
+</configuration>

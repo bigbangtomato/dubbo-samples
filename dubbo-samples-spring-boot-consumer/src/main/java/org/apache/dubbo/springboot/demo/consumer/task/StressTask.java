@@ -16,16 +16,12 @@
  */
 package org.apache.dubbo.springboot.demo.consumer.task;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.apache.dubbo.springboot.demo.consumer.aop.GracefulShuttingDown;
-import org.apache.dubbo.springboot.demo.consumer.hook.SpringShutdownHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

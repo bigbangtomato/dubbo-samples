@@ -41,8 +41,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <dubbo.version>3.2.9</dubbo.version>
-        <spring-boot.version>2.7.8</spring-boot.version>
-        <zookeeper.version>3.8.3</zookeeper.version>
+        
+        <spring-boot.version>2.6.3</spring-boot.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <nacos-config-spring-boot.version>2021.0.1.0</nacos-config-spring-boot.version>
     </properties>
 
     <modules>
