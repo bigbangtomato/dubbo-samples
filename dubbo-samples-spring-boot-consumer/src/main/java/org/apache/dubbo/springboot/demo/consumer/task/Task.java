@@ -22,13 +22,13 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.apache.dubbo.springboot.demo.consumer.aop.GracefulShuttingDown;
-import org.apache.dubbo.springboot.demo.consumer.hook.SpringShutdownHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Profile({"!stress"})
 @Component
 public class Task implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
@@ -38,8 +38,6 @@ public class Task implements CommandLineRunner {
 
     @DubboReference(version = "2.0.0")
     private DemoService demoServiceV2;
-
-    private final AtomicBoolean running = new AtomicBoolean(true);
 
     @Override
     public void run(String... args) throws Exception {
@@ -53,7 +51,6 @@ public class Task implements CommandLineRunner {
             while (!GracefulShuttingDown.isShuttingDown())
             {
                 i++;
-                running.set(true);
                 try {
                     String res1 = demoService.sayHello("world");
                     LOGGER.info("going whatever");
@@ -80,7 +77,6 @@ public class Task implements CommandLineRunner {
             while (!GracefulShuttingDown.isShuttingDown())
             {
                 i++;
-                running.set(true);
                 try {
                     String res1 = demoServiceV2.sayHello("world");
                     LOGGER.info("going whatever");

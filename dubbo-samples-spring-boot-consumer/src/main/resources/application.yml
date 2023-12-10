@@ -26,5 +26,7 @@ dubbo:
     application:
         name: dubbo-springboot-demo-consumer
         qosEnable: false
+    protocol:
+      name: tri
     registry:
         address: nacos://localhost:8848

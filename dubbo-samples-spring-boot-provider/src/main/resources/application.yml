@@ -21,6 +21,7 @@ dubbo:
   protocol:
     name: tri
     port: 50052
+    accepts: 10
   registry:
     address: nacos://localhost:8848
 

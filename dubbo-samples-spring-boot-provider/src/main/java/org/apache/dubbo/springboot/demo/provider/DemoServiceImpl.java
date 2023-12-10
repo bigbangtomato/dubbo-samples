@@ -28,12 +28,22 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     public String sayHello(String name) {
-        LOGGER.info("handle client request {}", name);
+	    try {
+		    Thread.sleep(1000);
+	    } catch (InterruptedException e) {
+		    throw new RuntimeException(e);
+	    }
+	    LOGGER.info("handle client request {}", name);
         return "Hello " + name;
     }
 
     @Override
     public String sayHello(Integer num) {
+	    try {
+		    Thread.sleep(1000);
+	    } catch (InterruptedException e) {
+		    throw new RuntimeException(e);
+	    }
         LOGGER.info("handle client request {}", num);
         return "Hello " + num;
     }

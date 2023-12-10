@@ -35,10 +35,9 @@ import org.springframework.stereotype.Component;
 public class StressTask implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(StressTask.class);
 
-    @DubboReference(version = "1.0.0")
+	// connections 似乎不生效。
+    @DubboReference(version = "1.0.0", connections = 20)
     private DemoService demoService;
-
-    private final AtomicBoolean running = new AtomicBoolean(true);
 
     @Override
     public void run(String... args) throws Exception {
@@ -58,7 +57,6 @@ public class StressTask implements CommandLineRunner {
 		        int i = 0;
 		        while (!GracefulShuttingDown.isShuttingDown()) {
 			        i++;
-			        running.set(true);
 			        try {
 				        String res1 = demoService.sayHello("world");
 				        LOGGER.info("thread {} Receive result ======> {}", threadNum, res1);
