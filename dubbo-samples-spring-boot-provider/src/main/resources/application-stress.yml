@@ -7,7 +7,5 @@ demo:
         path: /data/logs/java/dubbo/demo/simpleServer/stress/${demo.log.node}/
 
 dubbo:
-    application:
-        name: dubbo-springboot-demo-provider-${demo.log.node}
     protocol:
         port: ${linux.port}
