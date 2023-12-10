@@ -17,8 +17,6 @@
 package org.apache.dubbo.springboot.demo.provider;
 
 
-import javax.annotation.PostConstruct;
-
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.slf4j.Logger;

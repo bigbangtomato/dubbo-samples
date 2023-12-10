@@ -17,6 +17,7 @@
 dubbo:
   application:
     name: dubbo-springboot-demo-provider
+    qosEnable: false
   protocol:
     name: tri
     port: 50052
