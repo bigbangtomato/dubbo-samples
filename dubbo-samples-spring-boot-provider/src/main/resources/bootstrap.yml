@@ -14,6 +14,10 @@ demo:
   log:
     path: /data/logs/java/dubbo/demo/simpleServer/
 
+logging:
+  config: classpath:logback-delayed.xml
+#  prop-to-fill-in-logback-delayed.xml: whatever
+
 # Map Nacos Config: example.properties
 
 # Create the config Of nacos firstly?you can use one of the following two methods:

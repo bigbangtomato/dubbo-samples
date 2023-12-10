@@ -2,8 +2,14 @@
 
 <configuration scan="true" scanPeriod="1 seconds">
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
-	<springProperty scope="context" name="springAppName" source="dubbo.application.name" />
+
+	<springProperty scope="context" name="springAppName" source="spring.application.name" />
     <springProperty scope="context" name="path" source="demo.log.path" />
+<!--    <property resource="back/bootstrap.properties" />-->
+    <!--<property name="path" value="${demo.log.path}" />
+    <property name="springAppName" value="${spring.application.name}" />-->
+
+
 	<contextName>springboot-provider</contextName>
 	<jmxConfigurator />
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
