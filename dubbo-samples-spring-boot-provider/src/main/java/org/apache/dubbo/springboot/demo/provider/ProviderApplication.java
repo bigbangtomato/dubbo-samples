@@ -28,5 +28,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ProviderApplication {
     public static void main(String[] args) {
         SpringApplication.run(ProviderApplication.class, args);
+
+		Object wait = new Object();
+		synchronized (wait) {
+			try {
+				wait.wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
     }
 }

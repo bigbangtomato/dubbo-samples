@@ -1,12 +1,18 @@
-spring.cloud.nacos.config.server-addr=127.0.0.1:8848
+spring:
+  application:
+    name: dubbo-springboot-demo-provider
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        # Config Type: properties(Default Value) \ yaml \ yml
+        file-extension: yaml
 
-# appName
-spring.application.name=dubbo-springboot-demo-provider
-# Config Type: properties(Default Value) \ yaml \ yml
-spring.cloud.nacos.config.file-extension=yaml
 #spring.cloud.nacos.config.file-extension=yaml
 
-demo.log.path=/data/logs/java/dubbo/demo/simpleServer/
+demo:
+  log:
+    path: /data/logs/java/dubbo/demo/simpleServer/
 
 # Map Nacos Config: example.properties
 
