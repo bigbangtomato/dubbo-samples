@@ -83,11 +83,11 @@
             <artifactId>nacos-client</artifactId>
             <version>2.1.0</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>com.alibaba.nacos</groupId>
             <artifactId>nacos-api</artifactId>
             <version>2.1.0</version>
-        </dependency>
+        </dependency>-->
         <!--<dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-zookeeper-curator5-spring-boot-starter</artifactId>
